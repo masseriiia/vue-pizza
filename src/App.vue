@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
 import Header from '@/layouts/Header.vue'
+import HomePage from '@/pages/HomePage.vue'
 </script>
 
 <template>
   <div class="wrapper">
     <Header/>
     <div class="content">
-      <h1>Hello World!</h1>
+      <HomePage/>
     </div>
   </div>
 </template>
@@ -18,7 +19,7 @@ import Header from '@/layouts/Header.vue'
     height: 100%;
     margin: 50px auto;
     border-radius: 10px;
-    background-color: #f6f6f6;
+    background-color: #ffffff;
     box-shadow: 0 15px 20px 0 rgba(0, 0, 0, 0.03);
   }
 
