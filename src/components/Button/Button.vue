@@ -4,7 +4,7 @@
   </button>
 </template>
 
-<style>
+<style scoped>
   .button {
     display: flex;
     align-items: center;
@@ -12,7 +12,7 @@
     gap: 10px;
     padding: 15px 23px;
     width: 100%;
-    max-width: 150px;
+    max-width: 180px;
 
     font-family: var(--font-family);
     font-weight: 700;
