@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import Button from '@/components/Button/Button.vue'
 
+const cart = ref(JSON.parse(localStorage.getItem('pizzas')))
 const items = ref([])
 const typesNames = ['тонкое', 'традиционное']
 
@@ -13,7 +14,7 @@ const fetchItems = async () => {
       ...item,
       activeType: 0,
       activeSize: 0,
-      count: 0
+      count: 1
     }))
   } catch (e) {
     console.log('Ошибка', e)
@@ -28,8 +29,29 @@ const onClickSize = (item, index) => {
   item.activeSize = index
 }
 
-onMounted(fetchItems)
+const onAddCart = async (item) => {
+  const pizza = {
+    ...item,
+    type: typesNames[item.activeType],
+    size: item.sizes[item.activeSize],
+    count: 1
+  };
 
+  const existingPizza = cart.value.find(p => p.id === pizza.id && p.type === pizza.type && p.size === pizza.size)
+
+  if (existingPizza) {
+    existingPizza.count++
+  } else {
+    cart.value.push(pizza)
+  }
+
+  localStorage.setItem('pizzas', JSON.stringify(cart.value))
+
+}
+
+onMounted(async () => {
+  await fetchItems()
+})
 
 </script>
 
@@ -60,7 +82,7 @@ onMounted(fetchItems)
             </div>
             <div class="home-item-bottom">
               <p class="home-item-price">{{ item.price }} ₽</p>
-              <Button @click="console.log(item)">+ Добавить</Button>
+              <Button @click="() => onAddCart(item)">+ Добавить</Button>
             </div>
           </div>
         </div>

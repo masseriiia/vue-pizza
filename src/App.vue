@@ -1,14 +1,13 @@
 <script setup lang="ts">
-
 import Header from '@/layouts/Header.vue'
-import HomePage from '@/pages/HomePage.vue'
+
 </script>
 
 <template>
   <div class="wrapper">
     <Header/>
     <div class="content">
-      <HomePage/>
+      <RouterView />
     </div>
   </div>
 </template>
