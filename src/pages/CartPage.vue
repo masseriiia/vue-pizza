@@ -62,7 +62,7 @@ const totalPrice = computed(() => {
             <OutlinedButton @click="onPlusPizza(item)">+</OutlinedButton>
           </div>
           <p class="cart-item-price">
-            {{ item.price }} ₽
+            {{ item.price * item.count }} ₽
           </p>
           <button class="cart-item-delete" @click="onDeletePizza(item.id)">
             Удалить
