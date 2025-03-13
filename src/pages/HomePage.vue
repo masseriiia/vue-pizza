@@ -1,15 +1,27 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
-import Button from '@/components/Button/Button.vue'
+import PizzaItem from '@/components/CartItem/PizzaItem.vue'
+import Sort from '@/components/Sort/Sort.vue'
 
 const cart = ref(JSON.parse(localStorage.getItem('pizzas')))
 const items = ref([])
-const typesNames = ['тонкое', 'традиционное']
+
+const sortBy = ref('rating')
+
+const onChangeSelect = value => {
+  sortBy.value = value;
+  fetchItems()
+}
 
 const fetchItems = async () => {
   try {
-    const { data } = await axios.get('https://49a3806d839655dd.mokky.dev/items')
+    const params = {
+      sortBy: sortBy.value
+    }
+    const { data } = await axios.get('https://49a3806d839655dd.mokky.dev/items', {
+      params
+    })
     items.value = data.map(item => ({
       ...item,
       activeType: 0,
@@ -21,34 +33,6 @@ const fetchItems = async () => {
   }
 }
 
-const onClickType = (item, index) => {
-  item.activeType = index
-}
-
-const onClickSize = (item, index) => {
-  item.activeSize = index
-}
-
-const onAddCart = async (item) => {
-  const pizza = {
-    ...item,
-    type: typesNames[item.activeType],
-    size: item.sizes[item.activeSize],
-    count: 1
-  };
-
-  const existingPizza = cart.value.find(p => p.id === pizza.id && p.type === pizza.type && p.size === pizza.size)
-
-  if (existingPizza) {
-    existingPizza.count++
-  } else {
-    cart.value.push(pizza)
-  }
-
-  localStorage.setItem('pizzas', JSON.stringify(cart.value))
-
-}
-
 onMounted(async () => {
   await fetchItems()
 })
@@ -58,34 +42,13 @@ onMounted(async () => {
 <template>
   <div class="home">
     <div class="home-wrapper">
+      <div class="home-filter">
+        <div></div>
+        <Sort @onChangeSelect="onChangeSelect"/>
+      </div>
       <h1 class="home-title">Все пиццы</h1>
       <div class="home-items">
-        <div v-for="item of items" class="home-item" :key="item.id">
-          <img :src="item.imageUrl" width="260" height="260" alt="Pizza">
-          <div>
-            <p class="home-item-name">{{ item.title }}</p>
-            <div class="home-item-info">
-              <ul>
-                <li v-for="(type, index) of item.types" :key="index"
-                    @click="onClickType(item, index)"
-                    :class="{active: item.activeType === index}">
-                  {{ typesNames[type] }}
-                </li>
-              </ul>
-              <ul>
-                <li v-for="(size, index) of item.sizes" :key="index"
-                    @click="onClickSize(item, index)"
-                    :class="{active: item.activeSize === index}">
-                  {{ size }} см.
-                </li>
-              </ul>
-            </div>
-            <div class="home-item-bottom">
-              <p class="home-item-price">{{ item.price }} ₽</p>
-              <Button @click="() => onAddCart(item)">+ Добавить</Button>
-            </div>
-          </div>
-        </div>
+        <PizzaItem :items="items" :cart="cart"/>
       </div>
     </div>
   </div>
@@ -96,6 +59,11 @@ onMounted(async () => {
   .home {
     padding-top: 30px;
     padding-bottom: 30px;
+  }
+
+  .home-filter {
+    display: flex;
+    justify-content: space-between;
   }
 
   .home-title {
@@ -112,65 +80,6 @@ onMounted(async () => {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 60px;
-  }
-
-  .home-item {
-
-  }
-
-  .home-item-name {
-    margin-bottom: 22px;
-    font-family: var(--font-family);
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: 0.01em;
-    text-align: center;
-    color: #000;
-  }
-
-  .home-item-info {
-    margin-bottom: 17px;
-    padding: 7px;
-    flex: 1;
-    text-align: center;
-    background-color: #f3f3f3;
-    border-radius: 10px;
-  }
-
-  ul {
-    margin-bottom: 5px;
-    display: flex;
-    list-style: none;
-    justify-content: space-between;
-  }
-
-  ul:last-child {
-    margin-bottom: 0;
-  }
-
-  li{
-    padding: 7px;
-    flex: 1;
-    cursor: pointer;
-  }
-
-  li.active {
-    background-color: #ffffff;
-    border-radius: 5px;
-  }
-
-  .home-item-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .home-item-price {
-    font-family: var(--font-family);
-    font-weight: 700;
-    font-size: 22px;
-    letter-spacing: 0.01em;
-    color: #000;
   }
 
 </style>
