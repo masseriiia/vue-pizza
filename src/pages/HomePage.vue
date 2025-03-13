@@ -1,23 +1,29 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import axios from 'axios'
 import PizzaItem from '@/components/CartItem/PizzaItem.vue'
 import Sort from '@/components/Sort/Sort.vue'
+import Category from '@/components/Category/Category.vue'
 
 const cart = ref(JSON.parse(localStorage.getItem('pizzas')))
 const items = ref([])
 
-const sortBy = ref('rating')
+const filters = reactive({
+  sortBy: 'rating',
+  category: -1
+})
 
 const onChangeSelect = value => {
-  sortBy.value = value;
-  fetchItems()
+  filters.sortBy = value;
 }
 
 const fetchItems = async () => {
   try {
     const params = {
-      sortBy: sortBy.value
+      sortBy: filters.sortBy
+    }
+    if (filters.category >= 0) {
+      params.category = filters.category
     }
     const { data } = await axios.get('https://49a3806d839655dd.mokky.dev/items', {
       params
@@ -33,9 +39,16 @@ const fetchItems = async () => {
   }
 }
 
+const onClickCategory = (id) => {
+  filters.category = id === 0 ? -1 : id
+}
+
 onMounted(async () => {
   await fetchItems()
 })
+
+watch(filters, fetchItems, { deep: true })
+
 
 </script>
 
@@ -43,7 +56,7 @@ onMounted(async () => {
   <div class="home">
     <div class="home-wrapper">
       <div class="home-filter">
-        <div></div>
+        <Category @onClickCategory="onClickCategory" :filters="filters"/>
         <Sort @onChangeSelect="onChangeSelect"/>
       </div>
       <h1 class="home-title">Все пиццы</h1>
@@ -62,6 +75,7 @@ onMounted(async () => {
   }
 
   .home-filter {
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
   }
@@ -77,7 +91,6 @@ onMounted(async () => {
 
   .home-items {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     gap: 60px;
   }
