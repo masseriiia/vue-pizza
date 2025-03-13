@@ -1,6 +1,7 @@
 :root {
     --font-family: 'Proxima Nova', Roboto, system-ui, Tahoma, sans-serif;
 
+    --color-gray: #f9fafb;
     --color-gray-line: #f6f6f6;
     --color-orange: #fe5f1e;
     --color-black: #232323;
