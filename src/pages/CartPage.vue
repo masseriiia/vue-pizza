@@ -51,7 +51,7 @@ const totalPrice = computed(() => {
       </div>
       <div class="cart-items">
         <div v-for="item in items" class="cart-item" :key="item.id">
-          <img class="cart-item-image" :src="item.imageUrl" >
+          <img class="cart-item-image" :src="item.image_url" >
           <div class="cart-item-description">
             <p class="cart-item-name">{{ item.title }}</p>
             <p class="cart-item-info">{{ item.type }} тесто, {{ item.size }} см.</p>

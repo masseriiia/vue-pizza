@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 defineProps({
-  filters: Object
+  activeCategory: Number
 })
 
 const emit = defineEmits("onClickCategory")
@@ -18,7 +18,7 @@ const onChange = (id) => {
     <ul class="category-items">
       <li
         class="category-item"
-        :class="{active: filters.category === index || (filters.category === -1 && index === 0) }"
+        :class="{active: activeCategory === index }"
         v-for="(item, index) in category"
         @click="onChange(index)"
         :key="index"

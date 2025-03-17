@@ -12,7 +12,7 @@
     <img src="@/assets/icons/sort.svg" alt="Сортировка"/>
     <span class="sort-title">Сортировать по:</span>
     <select @change="onChange" class="sort-items">
-      <option value="rating" class="home-sort-item">рейтингу</option>
+      <option value="title" class="home-sort-item">названию</option>
       <option value="price" class="home-sort-item">возрастанию</option>
       <option value="-price" class="home-sort-item">убыванию</option>
     </select>

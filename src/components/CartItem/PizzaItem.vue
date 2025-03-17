@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import Button from '@/components/Button/Button.vue'
-  import { computed, toRef } from 'vue'
+  import { toRef } from 'vue'
   import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
 
   const props = defineProps({
@@ -55,27 +55,27 @@
   }
 
 
-  const onMinusPizza = (item) => {
-    if (item.count <= 1) {
-      return 1
-    }
-    item.count--
-    localStorage.setItem('pizzas', JSON.stringify(items.value))
-  }
-
-  const onPlusPizza = (item) => {
-    if (item.count === 10) {
-      return 10
-    }
-    item.count++
-    localStorage.setItem('pizzas', JSON.stringify(items.value))
-  }
+  // const onMinusPizza = (item) => {
+  //   if (item.count <= 1) {
+  //     return 1
+  //   }
+  //   item.count--
+  //   localStorage.setItem('pizzas', JSON.stringify(items.value))
+  // }
+  //
+  // const onPlusPizza = (item) => {
+  //   if (item.count === 10) {
+  //     return 10
+  //   }
+  //   item.count++
+  //   localStorage.setItem('pizzas', JSON.stringify(items.value))
+  // }
 
 </script>
 
 <template>
   <div v-for="item of items" class="pizza-item" :key="item.id">
-    <img :src="item.imageUrl" width="260" height="260" alt="Pizza">
+    <img :src="item.image_url" width="260" height="260" alt="Pizza">
     <div>
       <p class="pizza-item-name">{{ item.title }}</p>
       <div class="pizza-item-info">
