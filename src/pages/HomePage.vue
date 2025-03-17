@@ -1,98 +1,105 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue'
-import axios from 'axios'
+import { onMounted, reactive, ref } from 'vue'
 import PizzaItem from '@/components/CartItem/PizzaItem.vue'
 import Sort from '@/components/Sort/Sort.vue'
 import Category from '@/components/Category/Category.vue'
+import {
+   fetchPizzasWithFilters, fetchPizzas
+} from '@/services/pizzaService.ts'
+import Filter from '@/components/Filter/Filter.vue'
 
-const cart = ref(JSON.parse(localStorage.getItem('pizzas')))
-const items = ref([])
+const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || '[]')
+const pizzas = ref([])
 
 const filters = reactive({
-  sortBy: 'rating',
-  category: -1
+  activeCategory: 0,
+  activeSort: 'title',
+  pizzaNewBoolean: false,
+  formDataPrice: reactive({
+    priceFrom: 0,
+    priceTo: 0,
+  })
 })
 
-const onChangeSelect = value => {
-  filters.sortBy = value;
+const onChangeSort = async (value) => {
+  filters.activeSort = value
+  pizzas.value = await fetchPizzasWithFilters(filters)
 }
 
-const fetchItems = async () => {
-  try {
-    const params = {
-      sortBy: filters.sortBy
-    }
-    if (filters.category >= 0) {
-      params.category = filters.category
-    }
-    const { data } = await axios.get('https://49a3806d839655dd.mokky.dev/items', {
-      params
-    })
-    items.value = data.map(item => ({
-      ...item,
-      activeType: 0,
-      activeSize: 0,
-      count: 1
-    }))
-  } catch (e) {
-    console.log('Ошибка', e)
-  }
+const onChangeCategory = async (id) => {
+  filters.activeCategory = id
+  pizzas.value = await fetchPizzasWithFilters(filters)
 }
 
-const onClickCategory = (id) => {
-  filters.category = id === 0 ? -1 : id
+const onChangeNewPizza = async (value) => {
+  filters.pizzaNewBoolean = !value
+  pizzas.value = await fetchPizzasWithFilters(filters)
 }
 
-onMounted(async () => {
-  await fetchItems()
-})
+const onChangePrice = async () => {
+  pizzas.value = await fetchPizzasWithFilters(filters)
+}
 
-watch(filters, fetchItems, { deep: true })
+const onClickResetPrice = async () => {
+  filters.pizzaNewBoolean = false
+  filters.formDataPrice.priceFrom = 0
+  filters.formDataPrice.priceTo = 0
+  pizzas.value = await fetchPizzas()
+}
 
+onMounted(async () => pizzas.value = await fetchPizzas())
 
 </script>
 
 <template>
   <div class="home">
     <div class="home-wrapper">
-      <div class="home-filter">
-        <Category @onClickCategory="onClickCategory" :filters="filters"/>
-        <Sort @onChangeSelect="onChangeSelect"/>
-      </div>
       <h1 class="home-title">Все пиццы</h1>
-      <div class="home-items">
-        <PizzaItem :items="items" :cart="cart"/>
+      <div class="home-choice">
+        <Category @onClickCategory="onChangeCategory" :activeCategory="filters.activeCategory"/>
+        <Sort @onChangeSelect="onChangeSort"/>
       </div>
+      <div class="home-content">
+          <Filter :filters="filters" @emit-new="onChangeNewPizza" @emit-price="onChangePrice" @emit-reset="onClickResetPrice"/>
+        <div class="home-items">
+          <PizzaItem :items="pizzas" :cart="cart"/>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
 
 <style>
 
-  .home {
-    padding-top: 30px;
-    padding-bottom: 30px;
-  }
+.home {
+  padding-bottom: 30px;
+}
 
-  .home-filter {
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-  }
+.home-title {
+  margin-bottom: 20px;
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: 0.01em;
+  color: #000;
+}
 
-  .home-title {
-    margin-bottom: 35px;
-    font-family: var(--font-family);
-    font-weight: 700;
-    font-size: 32px;
-    letter-spacing: 0.01em;
-    color: #000;
-  }
+.home-choice {
+  margin-bottom: 55px;
+  display: flex;
+  justify-content: space-between;
+}
 
-  .home-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 60px;
-  }
+.home-content {
+  display: flex;
+  gap: 62px;
+}
+
+.home-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+}
 
 </style>
