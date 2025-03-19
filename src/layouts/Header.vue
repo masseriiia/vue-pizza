@@ -1,63 +1,94 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import Search from '@/components/Search/Search.vue'
 import Button from '@/components/Button/Button.vue'
-import { RouterLink } from 'vue-router';
+import { computed, ref, watch } from 'vue'
+
+const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || '[]')
+
+const isOverlayVisible = ref(false)
+
+const close = () => {
+  isOverlayVisible.value = false
+}
+
+const totalPrice = computed(() => {
+  return cart.value.reduce((acc, item) => acc + item.price * item.count, 0)
+})
+
+watch(cart, () => {
+  cart.value = localStorage.getItem('pizzas')
+},  { deep: true });
 
 </script>
 
 <template>
   <div class="header">
     <div class="header-wrapper">
-        <RouterLink to="/" class="logo">
-        <img src="../assets/icons/pizza-logo.svg" width="38" height="38">
+      <RouterLink to="/" class="logo">
+        <img src="../assets/icons/pizza-logo.svg" width="38" height="38" alt="Logo" />
         <div class="logo-wrapper">
           <p class="logo-title">VUE PIZZA</p>
-          <p class="logo-description">самая вкусная пицца во вселенной</p>
+          <p class="logo-description">вкусней уже точно некуда</p>
         </div>
       </RouterLink>
+      <Search :isOverlayVisible="isOverlayVisible" @toggle-overlay="isOverlayVisible = !isOverlayVisible" :close="close"/>
       <RouterLink to="/cart">
         <Button>
-          <p class="cart-price">{{ 0 }} ₽</p>
-          <img src="../assets/icons/cart.svg">
+          <p class="cart-price">{{ totalPrice }} ₽</p>
+          <img src="../assets/icons/cart.svg" alt="Cart" />
         </Button>
       </RouterLink>
     </div>
+    <div v-if="isOverlayVisible" class="overlay" @click.self="close"></div>
   </div>
 </template>
 
 <style>
-  .cart-price {
-    padding-right: 10px;
-    border-right: 1px solid rgba(255, 255, 255, 0.25);
-  }
+.cart-price {
+  padding-right: 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
 
-  .header {
-    padding: 45px;
-    border-bottom: 1px solid rgba(95, 90, 90, 0.25);
-  }
+.header {
+  padding: 45px;
+  border-bottom: 1px solid rgba(95, 90, 90, 0.25);
+}
 
-  .header-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 17px;
-  }
-  .logo-title {
-    font-family: var(--font-family);
-    font-weight: 800;
-    font-size: 24px;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    color: #181818;
-  }
-  .logo-description {
-    font-family: var(--font-family);
-    font-weight: 400;
-    font-size: 16px;
-    color: #7b7b7b;
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+.logo-title {
+  font-family: var(--font-family);
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #181818;
+}
+.logo-description {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  color: #7b7b7b;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
 </style>
