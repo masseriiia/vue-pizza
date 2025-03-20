@@ -12,14 +12,6 @@
 
   const typesNames = ['тонкое', 'традиционное']
 
-  const onClickType = (item, index) => {
-    item.activeType = index
-  }
-
-  const onClickSize = (item, index) => {
-    item.activeSize = index
-  }
-
   const onAddCart = async (item) => {
     const pizza = {
       ...item,
@@ -54,46 +46,16 @@
     return existingPizza ? existingPizza.count : 0
   }
 
-
-  // const onMinusPizza = (item) => {
-  //   if (item.count <= 1) {
-  //     return 1
-  //   }
-  //   item.count--
-  //   localStorage.setItem('pizzas', JSON.stringify(items.value))
-  // }
-  //
-  // const onPlusPizza = (item) => {
-  //   if (item.count === 10) {
-  //     return 10
-  //   }
-  //   item.count++
-  //   localStorage.setItem('pizzas', JSON.stringify(items.value))
-  // }
-
 </script>
 
 <template>
-  <div v-for="item of items" class="pizza-item" :key="item.id">
-    <img class="pizza-item-image" :src="item.image_url" width="260" height="260" alt="Pizza">
-    <div>
+  <div v-for="item of items" class="pizza-item" :key="item.id" @click="onClickPizzaItem(item.id)">
+    <RouterLink :to="{ name: 'pizza', params: {id: item.id }}">
+      <img class="pizza-item-image" :src="item.image_url" width="260" height="260" alt="Pizza">
       <p class="pizza-item-name">{{ item.title }}</p>
-      <div class="pizza-item-info">
-        <ul>
-          <li v-for="(type, index) of item.types" :key="index"
-              @click="onClickType(item, index)"
-              :class="{active: item.activeType === index}">
-            {{ typesNames[type] }}
-          </li>
-        </ul>
-        <ul>
-          <li v-for="(size, index) of item.sizes" :key="index"
-              @click="onClickSize(item, index)"
-              :class="{active: item.activeSize === index}">
-            {{ size }} см.
-          </li>
-        </ul>
-      </div>
+      <p class="item-description">{{ item.description }}</p>
+    </RouterLink>
+    <div>
       <div class="pizza-item-bottom">
         <p class="pizza-item-price">{{ item.price }} ₽</p>
         <SecondaryButton v-if="getPizzaCount(item) > 0" @click="() => onAddCart(item)">
@@ -107,14 +69,10 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 
 .pizza-item {
   width: 260px;
-}
-
-.pizza-item-image {
-
 }
 
 .pizza-item-name {
@@ -127,35 +85,14 @@
   color: #000;
 }
 
-.pizza-item-info {
-  margin-bottom: 17px;
-  padding: 7px;
-  flex: 1;
-  text-align: center;
-  background-color: #f3f3f3;
-  border-radius: 10px;
-}
-
-ul {
-  margin-bottom: 5px;
-  display: flex;
-  list-style: none;
-  justify-content: space-between;
-}
-
-ul:last-child {
-  margin-bottom: 0;
-}
-
-li{
-  padding: 7px;
-  flex: 1;
-  cursor: pointer;
-}
-
-li.active {
-  background-color: #ffffff;
-  border-radius: 5px;
+.item-description {
+  margin-bottom: 10px;
+  font-family: var(--font-family);
+  height: 95px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 150%;
+  color: #b1b1b1;
 }
 
 .pizza-item-bottom {

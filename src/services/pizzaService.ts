@@ -63,3 +63,29 @@ function pizzasBySort(query, activeSort) {
     return query.order('title', { ascending: true });
   }
 }
+
+export async function fetchGetPizzaById(id: number) {
+  const { data} = await supabase
+    .from('pizza')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (data) {
+    return {
+      ...data,
+      activeType: 0,
+      activeSize: 0,
+      count: 1,
+    };
+  }
+}
+
+export async function fetchPizzasPopular() {
+  const { data } = await supabase
+    .from('pizza')
+    .select()
+    .gte('rating', 9);
+
+  return transformPizzas(data);
+}

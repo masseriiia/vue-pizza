@@ -45,6 +45,7 @@ const onChange = (id) => {
   font-size: 16px;
   text-align: center;
   color: #202020;
+  list-style-type: none;
   border-radius: 15px;
 }
 

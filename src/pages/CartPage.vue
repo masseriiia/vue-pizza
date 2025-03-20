@@ -36,7 +36,6 @@ const onDeletePizza = (id) => {
 const totalPrice = computed(() => {
   return items.value.reduce((acc, item) => acc + item.price * item.count, 0)
 })
-
 </script>
 
 <template >

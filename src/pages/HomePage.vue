@@ -3,15 +3,14 @@ import { onMounted, reactive, ref } from 'vue'
 import PizzaItem from '@/components/CartItem/PizzaItem.vue'
 import Sort from '@/components/Sort/Sort.vue'
 import Category from '@/components/Category/Category.vue'
-import {
-  fetchPizzas, fetchPizzasWithFilters
-} from '@/services/pizzaService.ts'
+import { fetchPizzasWithFilters } from '@/services/pizzaService.ts'
 
 import Filter from '@/components/Filter/Filter.vue'
 import Pagination from '@/components/Pagination/Pagination.vue'
 
 const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || '[]')
 const pizzas = ref([])
+const isLoading = ref(false)
 
 const currentPage = ref(1)
 const totalPages = ref(3)
@@ -28,10 +27,18 @@ const filters = reactive({
 })
 
 const getPagination = async (page = currentPage.value) => {
-  const { data, total } = await fetchPizzasWithFilters(filters, page, perPage);
-  pizzas.value = data
-  totalPages.value = Math.ceil(total / perPage)
-  currentPage.value = page
+  isLoading.value = true
+  try {
+    const { data, total } = await fetchPizzasWithFilters(filters, page, perPage);
+    pizzas.value = data
+    totalPages.value = Math.ceil(total / perPage)
+    currentPage.value = page
+  } catch (e) {
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
+
 }
 
 const onChangeSort = async (value) => {
@@ -76,7 +83,10 @@ onMounted(async () => {
       </div>
       <div class="home-content">
           <Filter :filters="filters" @emit-new="onChangeNewPizza" @emit-price="onChangePrice" @emit-reset="onClickResetPrice"/>
-        <div class="home-items">
+        <div v-if="isLoading" class="loading">
+          Загрузка...
+        </div>
+        <div v-else class="home-items">
           <PizzaItem :items="pizzas" :cart="cart"/>
         </div>
       </div>
