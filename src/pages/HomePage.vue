@@ -3,13 +3,18 @@ import { onMounted, reactive, ref } from 'vue'
 import PizzaItem from '@/components/CartItem/PizzaItem.vue'
 import Sort from '@/components/Sort/Sort.vue'
 import Category from '@/components/Category/Category.vue'
-import {
-   fetchPizzasWithFilters, fetchPizzas
-} from '@/services/pizzaService.ts'
+import { fetchPizzasWithFilters } from '@/services/pizzaService.ts'
+
 import Filter from '@/components/Filter/Filter.vue'
+import Pagination from '@/components/Pagination/Pagination.vue'
 
 const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || '[]')
 const pizzas = ref([])
+const isLoading = ref(false)
+
+const currentPage = ref(1)
+const totalPages = ref(3)
+const perPage = 8
 
 const filters = reactive({
   activeCategory: 0,
@@ -21,33 +26,50 @@ const filters = reactive({
   })
 })
 
+const getPagination = async (page = currentPage.value) => {
+  isLoading.value = true
+  try {
+    const { data, total } = await fetchPizzasWithFilters(filters, page, perPage);
+    pizzas.value = data
+    totalPages.value = Math.ceil(total / perPage)
+    currentPage.value = page
+  } catch (e) {
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
+
+}
+
 const onChangeSort = async (value) => {
   filters.activeSort = value
-  pizzas.value = await fetchPizzasWithFilters(filters)
+  await getPagination(1)
 }
 
 const onChangeCategory = async (id) => {
   filters.activeCategory = id
-  pizzas.value = await fetchPizzasWithFilters(filters)
+  await getPagination(1)
 }
 
 const onChangeNewPizza = async (value) => {
   filters.pizzaNewBoolean = !value
-  pizzas.value = await fetchPizzasWithFilters(filters)
+  await getPagination(1)
 }
 
 const onChangePrice = async () => {
-  pizzas.value = await fetchPizzasWithFilters(filters)
+  await getPagination(1)
 }
 
 const onClickResetPrice = async () => {
   filters.pizzaNewBoolean = false
   filters.formDataPrice.priceFrom = 0
   filters.formDataPrice.priceTo = 0
-  pizzas.value = await fetchPizzas()
+  await getPagination(1)
 }
 
-onMounted(async () => pizzas.value = await fetchPizzas())
+onMounted(async () => {
+  await getPagination()
+})
 
 </script>
 
@@ -61,20 +83,19 @@ onMounted(async () => pizzas.value = await fetchPizzas())
       </div>
       <div class="home-content">
           <Filter :filters="filters" @emit-new="onChangeNewPizza" @emit-price="onChangePrice" @emit-reset="onClickResetPrice"/>
-        <div class="home-items">
+        <div v-if="isLoading" class="loading">
+          Загрузка...
+        </div>
+        <div v-else class="home-items">
           <PizzaItem :items="pizzas" :cart="cart"/>
         </div>
       </div>
-
+      <Pagination @emit-paginate="getPagination" :currentPage="currentPage" :totalPages="totalPages"/>
     </div>
   </div>
 </template>
 
 <style>
-
-.home {
-  padding-bottom: 30px;
-}
 
 .home-title {
   margin-bottom: 20px;
@@ -82,7 +103,7 @@ onMounted(async () => pizzas.value = await fetchPizzas())
   font-weight: 700;
   font-size: 32px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .home-choice {
@@ -92,11 +113,13 @@ onMounted(async () => pizzas.value = await fetchPizzas())
 }
 
 .home-content {
+  margin-bottom: 40px;
   display: flex;
   gap: 62px;
 }
 
 .home-items {
+  height: 1000px;
   display: flex;
   flex-wrap: wrap;
   gap: 60px;

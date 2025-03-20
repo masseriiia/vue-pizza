@@ -48,15 +48,17 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
       <input @click="onTogglePizza" class="search-input" type="search" v-model="search" placeholder="Поиск пиццы..." />
     </div>
     <ul class="search-items">
-      <li class="search-item" :class="{'noActive': !isOverlayVisible}" v-for="item in itemsProducts" :key="item.id">
-        <img
-          :src="item.image_url"
-          width="40"
-          alt="Pizza"
-        />
-        <p>{{ item.title }}</p>
-        <p class="search-item-price">{{ item.price }} ₽</p>
-      </li>
+        <li :class="{'noActive': !isOverlayVisible}" v-for="item in itemsProducts" :key="item.id" @click="onTogglePizza">
+          <RouterLink class="search-item" :to="{ name: 'pizza', params: {id: item.id }}">
+            <img
+              :src="item.image_url"
+              width="40"
+              alt="Pizza"
+            />
+            <p class="search-item-title">{{ item.title }}</p>
+            <p class="search-item-price">{{ item.price }} ₽</p>
+          </RouterLink>
+        </li>
     </ul>
     <div v-if="isOverlayVisible" class="overlay" @click.self="close"></div>
   </div>
@@ -105,9 +107,10 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
   position: absolute;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   border-radius: 10px;
   z-index: 99;
+  list-style-type: none;
 }
 
 .search-item {
@@ -121,6 +124,13 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
 
 .search-item:hover {
   background-color: #fffaf6;
+}
+
+.search-item-title {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--color-black-secondary);
 }
 
 .search-item-price {

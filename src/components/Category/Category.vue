@@ -45,11 +45,12 @@ const onChange = (id) => {
   font-size: 16px;
   text-align: center;
   color: #202020;
+  list-style-type: none;
   border-radius: 15px;
 }
 
 .category-item.active {
-  background-color: #fff;
+  background-color: var(--color-white);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
 }
 </style>

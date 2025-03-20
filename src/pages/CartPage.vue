@@ -36,7 +36,6 @@ const onDeletePizza = (id) => {
 const totalPrice = computed(() => {
   return items.value.reduce((acc, item) => acc + item.price * item.count, 0)
 })
-
 </script>
 
 <template >
@@ -124,7 +123,7 @@ const totalPrice = computed(() => {
   font-weight: 700;
   font-size: 32px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .button-clear {
@@ -172,7 +171,7 @@ const totalPrice = computed(() => {
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .cart-description {
@@ -195,7 +194,7 @@ const totalPrice = computed(() => {
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .cart-item-delete {
@@ -221,7 +220,7 @@ const totalPrice = computed(() => {
   font-weight: 400;
   font-size: 22px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .cart-total-price {
@@ -229,7 +228,7 @@ const totalPrice = computed(() => {
   font-weight: 400;
   font-size: 22px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 
   span {
     font-weight: 700;
@@ -272,7 +271,7 @@ const totalPrice = computed(() => {
   font-weight: 700;
   font-size: 32px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 .cart-description-empty {
   margin-bottom: 50px;
