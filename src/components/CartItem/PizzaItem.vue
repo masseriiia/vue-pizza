@@ -75,7 +75,7 @@
 
 <template>
   <div v-for="item of items" class="pizza-item" :key="item.id">
-    <img :src="item.image_url" width="260" height="260" alt="Pizza">
+    <img class="pizza-item-image" :src="item.image_url" width="260" height="260" alt="Pizza">
     <div>
       <p class="pizza-item-name">{{ item.title }}</p>
       <div class="pizza-item-info">
@@ -108,6 +108,15 @@
 </template>
 
 <style>
+
+.pizza-item {
+  width: 260px;
+}
+
+.pizza-item-image {
+
+}
+
 .pizza-item-name {
   margin-bottom: 22px;
   font-family: var(--font-family);

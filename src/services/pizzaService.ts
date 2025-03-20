@@ -19,17 +19,27 @@ export async function fetchPizzas() {
   return transformPizzas(data);
 }
 
-export async function fetchPizzasWithFilters(obj) {
-  let query = supabase.from('pizza').select()
+export async function fetchPizzasWithFilters(obj, page, perPage) {
+  const start = (page - 1) * perPage
+  const end = start + perPage - 1
+
+  let query = supabase
+    .from('pizza')
+    .select('*', { count: 'exact' })
 
   query = pizzasCategory(query, obj.activeCategory)
   query = pizzasByFromToPrice(query, obj.formDataPrice)
   query = pizzasNew(query, obj.pizzaNewBoolean)
   query = pizzasBySort(query, obj.activeSort)
 
-  const { data } = await query
+  query = query.range(start, end);
 
-  return transformPizzas(data)
+  const { data, count } = await query
+
+  return {
+    data: transformPizzas(data),
+    total: count,
+  };
 }
 
 function pizzasCategory(query, category) {
