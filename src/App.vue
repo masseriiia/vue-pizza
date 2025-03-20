@@ -18,7 +18,7 @@ import Header from '@/layouts/Header.vue'
     height: 100%;
     margin: 50px auto;
     border-radius: 10px;
-    background-color: #ffffff;
+    background-color: var(--color-white);
     box-shadow: 0 15px 20px 0 rgba(0, 0, 0, 0.03);
   }
 

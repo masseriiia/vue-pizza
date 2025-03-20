@@ -103,7 +103,7 @@ onMounted(async () => {
   font-weight: 700;
   font-size: 32px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .home-choice {

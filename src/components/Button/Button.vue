@@ -17,7 +17,7 @@
     font-family: var(--font-family);
     font-weight: 700;
     font-size: 16px;
-    color: #fff;
+    color: var(--color-white);
 
     color: var(--color-gray-line);
     border-radius: 30px;

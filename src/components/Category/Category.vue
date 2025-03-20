@@ -50,7 +50,7 @@ const onChange = (id) => {
 }
 
 .category-item.active {
-  background-color: #fff;
+  background-color: var(--color-white);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
 }
 </style>

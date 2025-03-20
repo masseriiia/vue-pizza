@@ -62,7 +62,7 @@ function resetFilters() {
   font-family: var(--font-family);
   font-weight: 700;
   font-size: 22px;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .filter-content {
@@ -89,7 +89,7 @@ function resetFilters() {
   font-family: var(--font-family);
   font-weight: 700;
   font-size: 16px;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .form-inputs {
@@ -115,7 +115,7 @@ function resetFilters() {
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 14px;
-  color: #000;
+  color: var(--color-black-secondary);
 
   border: 1px solid #f6f6f6;
   border-radius: 10px;

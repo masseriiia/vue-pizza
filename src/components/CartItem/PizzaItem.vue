@@ -82,7 +82,7 @@
   font-size: 20px;
   letter-spacing: 0.01em;
   text-align: center;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .item-description {
@@ -106,7 +106,7 @@
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .pizza-item-count {
@@ -121,7 +121,7 @@
   font-weight: 700;
   font-size: 13px;
 
-  color: #ffffff;
+  color: var(--color-white);
   background: var(--color-orange);
   border-radius: 50px;
 }

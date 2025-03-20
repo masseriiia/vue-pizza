@@ -107,7 +107,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
   position: absolute;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   border-radius: 10px;
   z-index: 99;
   list-style-type: none;
@@ -130,7 +130,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 16px;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .search-item-price {

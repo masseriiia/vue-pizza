@@ -53,7 +53,7 @@ function getPagination(page) {
   font-size: 14px;
   font-weight: 500;
   color: #333;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   border: 1px solid #ddd;
   border-radius: 10px;
   cursor: pointer;
@@ -80,7 +80,7 @@ function getPagination(page) {
 
 .pagination button.active {
   background-color: var(--color-orange);
-  color: #fff;
+  color: var(--color-white);
   border-color: var(--color-orange);
 }
 </style>

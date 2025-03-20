@@ -207,7 +207,7 @@ li{
 }
 
 li.active {
-  background-color: #ffffff;
+  background-color: var(--color-white);
   border-radius: 5px;
 }
 
@@ -222,7 +222,7 @@ li.active {
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.01em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .populars-title {

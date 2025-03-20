@@ -42,7 +42,7 @@ import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
   font-weight: 800;
   font-size: 40px;
   letter-spacing: 0em;
-  color: #000;
+  color: var(--color-black-secondary);
 }
 
 .error-description {
