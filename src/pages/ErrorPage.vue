@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
 </script>
 

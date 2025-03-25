@@ -1,18 +1,28 @@
 <script setup lang="ts">
   import Button from '@/components/Button/Button.vue'
-  import { toRef } from 'vue'
+  import { useGlobalState } from '@/stores/store'
   import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
 
-  const props = defineProps({
-    items: Array,
-    cart: Object
-  })
+  interface PizzaItem {
+  id: number
+  title: string
+  description: string
+  image_url: string
+  price: number
+  activeType: number
+  activeSize: number
+  sizes: number[]
+  }
 
-  const cart = toRef(props, 'cart')
+  const props = defineProps<{
+    items: PizzaItem[]
+  }>()
+
+  const cart = useGlobalState()
 
   const typesNames = ['тонкое', 'традиционное']
 
-  const onAddCart = async (item) => {
+  const onAddCart = async (item: PizzaItem) => {
     const pizza = {
       ...item,
       type: typesNames[item.activeType],
@@ -31,7 +41,6 @@
       cart.value.push(pizza)
     }
 
-    localStorage.setItem('pizzas', JSON.stringify(cart.value))
   }
 
   const getPizzaCount = (item) => {
@@ -49,7 +58,7 @@
 </script>
 
 <template>
-  <div v-for="item of items" class="pizza-item" :key="item.id" @click="onClickPizzaItem(item.id)">
+  <div v-for="item of items" class="pizza-item" :key="item.id">
     <RouterLink :to="{ name: 'pizza', params: {id: item.id }}">
       <img class="pizza-item-image" :src="item.image_url" width="260" height="260" alt="Pizza">
       <p class="pizza-item-name">{{ item.title }}</p>

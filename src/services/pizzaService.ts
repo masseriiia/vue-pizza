@@ -5,7 +5,19 @@ const supabaseKey: string = import.meta.env.VITE_SUPABASE_KEY
 
 export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
-const transformPizzas = (data) => {
+interface Pizza {
+  id: number;
+  title: string;
+  price: number;
+  category: number;
+  rating: number;
+  new?: boolean;
+  activeType: number;
+  activeSize: number;
+  count: number;
+}
+
+const transformPizzas = (data): Pizza[] => {
   return data?.map(item => ({
     ...item,
     activeType: 0,
@@ -19,7 +31,7 @@ export async function fetchPizzas() {
   return transformPizzas(data);
 }
 
-export async function fetchPizzasWithFilters(obj, page, perPage) {
+export async function fetchPizzasWithFilters(obj, page: number, perPage: number) {
   const start = (page - 1) * perPage
   const end = start + perPage - 1
 
@@ -42,19 +54,19 @@ export async function fetchPizzasWithFilters(obj, page, perPage) {
   };
 }
 
-function pizzasCategory(query, category) {
+function pizzasCategory(query, category: number) {
   return category !== 0 ? query.in('category', [category]) : query;
 }
 
-function pizzasByFromToPrice(query, { priceFrom, priceTo }) {
+function pizzasByFromToPrice(query, { priceFrom, priceTo }: { priceFrom: number, priceTo: number }) {
   return priceFrom > 0 || priceTo > 0 ? query.gte('price', priceFrom).lte('price', priceTo) : query
 }
 
-function pizzasNew(query, pizzaNewBoolean) {
+function pizzasNew(query, pizzaNewBoolean: boolean) {
   return pizzaNewBoolean === true ? query.eq('new', true) : query
 }
 
-function pizzasBySort(query, activeSort) {
+function pizzasBySort(query, activeSort: string) {
   if (activeSort === 'price') {
     return query.order('price', { ascending: true });
   } else if (activeSort === '-price') {

@@ -1,8 +1,11 @@
 <script setup lang="ts" >
-  const emit = defineEmits(['onChangeSelect'])
+  const emit = defineEmits<{
+    (event: 'onChangeSelect', value: string): void
+  }>()
 
-  function onChange(event) {
-    emit('onChangeSelect', event.target.value)
+  function onChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    emit('onChangeSelect', target.value)
   }
 
 </script>

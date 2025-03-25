@@ -4,7 +4,20 @@
   import { fetchGetPizzaById, fetchPizzasPopular } from '@/services/pizzaService.ts'
   import Button from '@/components/Button/Button.vue'
   import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
-  import PizzaItem from '@/components/CartItem/PizzaItem.vue'
+  import PizzaItem from '@/components/PizzaItem/PizzaItem.vue'
+  import { useGlobalState } from '@/stores/store'
+
+  interface Pizza {
+  id: number;
+  title: string;
+  description: string;
+  image_url: string;
+  price: number;
+  types: number[];
+  sizes: number[];
+  activeType?: number;
+  activeSize?: number;
+}
 
   const router = useRouter()
   const currentId = ref(Number(router.currentRoute.value.params.id))
@@ -12,28 +25,27 @@
   const populars = ref([])
   const isLoading = ref(false)
 
-  const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || []);
+  const cart = useGlobalState()
 
   const typesNames = ['тонкое', 'традиционное']
-
 
   const getPopularPizzas = async () => {
     populars.value = await fetchPizzasPopular()
   }
 
-  const onClickType = (index) => {
+  const onClickType = (index: number) => {
     pizza.value.activeType = index
   }
 
-  const onClickSize = (index) => {
+  const onClickSize = (index: number) => {
     pizza.value.activeSize = index
   }
 
-  const onAddCart = async (item) => {
+  const onAddCart = async (item: Pizza) => {
     const pizza = {
       ...item,
-      type: typesNames[item.activeType],
-      size: item.sizes[item.activeSize],
+      type: typesNames[item.activeType ?? 0],
+      size: item.sizes[item.activeSize ?? 0],
       count: 1
     };
 
@@ -47,17 +59,15 @@
     } else {
       cart.value.push(pizza)
     }
-
-    localStorage.setItem('pizzas', JSON.stringify(cart.value))
   }
 
-  const getPizzaCount = (item) => {
+  const getPizzaCount = (item: Pizza) => {
     if (!item || !item.sizes) return 0
 
     const pizza = {
       ...item,
-      type: typesNames[item.activeType],
-      size: item.sizes[item.activeSize]
+      type: typesNames[item.activeType ?? 0],
+      size: item.sizes[item.activeSize ?? 0]
     }
 
     const existingPizza = cart.value.find(p => p.id === pizza.id && p.type === pizza.type && p.size === pizza.size)
@@ -95,7 +105,7 @@
       Загрузка...
     </div>
     <div v-else class="pizza-wrapper">
-      <p class="pizza-location">Главная  /  Пиццы   /  <span>{{ pizza.title }}</span> </p>
+      <p class="pizza-location"><RouterLink class="pizza-location" to="/">Главная</RouterLink> / <RouterLink class="pizza-location" to="/">Пиццы</RouterLink> / <span>{{ pizza.title }}</span></p>
       <div  class="pizza-content">
         <img :src="pizza.image_url" width="400" height="400" alt="Pizza" />
         <div class="pizza-info">
