@@ -1,14 +1,16 @@
 <script setup lang="ts">
 
-defineProps({
-  activeCategory: Number
-})
+const props = defineProps<{
+  activeCategory: number
+}>()
 
-const emit = defineEmits("onClickCategory")
+const emit = defineEmits<{
+  (event: "onClickCategory", value: number): void
+}>()
 
 const category = ["Все", "Мясные", "Вегетарианская", "Гриль", "Острые", "Закрыте"]
 
-const onChange = (id) => {
+const onChange = (id: number) => {
   emit("onClickCategory", id)
 }
 

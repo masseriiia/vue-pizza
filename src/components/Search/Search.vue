@@ -2,12 +2,15 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { fetchPizzas } from '@/services/pizzaService.ts'
 
-defineProps({
-  isOverlayVisible: Boolean,
-  close: Function
-})
 
-const emit = defineEmits(['toggle-overlay'])
+const props = defineProps<{
+  isOverlayVisible: boolean,
+  close: () => void
+}>()
+
+const emit = defineEmits<{
+  (event: 'toggle-overlay', value: boolean): void
+}>()
 
 const items = ref([])
 const search = ref('')
@@ -22,12 +25,12 @@ const itemsProducts = computed(() => {
   }
 })
 
-const onTogglePizza = (e) => {
+const onTogglePizza = (e: Event) => {
   e.stopPropagation()
   emit('toggle-overlay')
 }
 
-const handleKeyDown = (e) => {
+const handleKeyDown = (e: Event) => {
   if (e.key === 'Escape') {
     emit('toggle-overlay')
   }

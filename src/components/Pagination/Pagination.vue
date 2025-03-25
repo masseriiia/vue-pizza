@@ -1,12 +1,14 @@
 <script setup lang="ts">
-const props = defineProps({
-  currentPage: Number,
-  totalPages: Number
-})
+const props = defineProps<{
+  currentPage: number,
+  totalPages: number
+}>()
 
-const emit = defineEmits(['emit-paginate'])
+const emit = defineEmits<{
+  (event: 'emit-paginate', value: number): void
+}>()
 
-function getPagination(page) {
+function getPagination(page: number) {
   emit('emit-paginate', page)
 }
 

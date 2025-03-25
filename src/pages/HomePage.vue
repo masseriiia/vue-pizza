@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import PizzaItem from '@/components/CartItem/PizzaItem.vue'
+import PizzaItem from '@/components/PizzaItem/PizzaItem.vue'
 import Sort from '@/components/Sort/Sort.vue'
 import Category from '@/components/Category/Category.vue'
 import { fetchPizzasWithFilters } from '@/services/pizzaService.ts'
-
 import Filter from '@/components/Filter/Filter.vue'
 import Pagination from '@/components/Pagination/Pagination.vue'
 
-const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || '[]')
+interface FilterOptions {
+  activeCategory: number;
+  activeSort: string;
+  pizzaNewBoolean: boolean;
+  formDataPrice: {
+    priceFrom: number;
+    priceTo: number;
+  };
+}
+
 const pizzas = ref([])
 const isLoading = ref(false)
 
@@ -16,7 +24,7 @@ const currentPage = ref(1)
 const totalPages = ref(3)
 const perPage = 8
 
-const filters = reactive({
+const filters = reactive<FilterOptions>({
   activeCategory: 0,
   activeSort: 'title',
   pizzaNewBoolean: false,
@@ -31,27 +39,26 @@ const getPagination = async (page = currentPage.value) => {
   try {
     const { data, total } = await fetchPizzasWithFilters(filters, page, perPage);
     pizzas.value = data
-    totalPages.value = Math.ceil(total / perPage)
+    totalPages.value = Math.ceil((total || 0) / perPage)
     currentPage.value = page
   } catch (e) {
     console.error(e)
   } finally {
     isLoading.value = false
   }
-
 }
 
-const onChangeSort = async (value) => {
+const onChangeSort = async (value: string) => {
   filters.activeSort = value
   await getPagination(1)
 }
 
-const onChangeCategory = async (id) => {
+const onChangeCategory = async (id: number) => {
   filters.activeCategory = id
   await getPagination(1)
 }
 
-const onChangeNewPizza = async (value) => {
+const onChangeNewPizza = async (value: string) => {
   filters.pizzaNewBoolean = !value
   await getPagination(1)
 }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useGlobalState } from '@/stores/store.js'
 import { RouterLink } from 'vue-router'
 import Search from '@/components/Search/Search.vue'
 import Button from '@/components/Button/Button.vue'
-import { computed, ref, watch } from 'vue'
 
-const cart = ref(JSON.parse(localStorage.getItem('pizzas')) || '[]')
+const cart = useGlobalState()
 
 const isOverlayVisible = ref(false)
 
@@ -15,10 +16,6 @@ const close = () => {
 const totalPrice = computed(() => {
   return cart.value.reduce((acc, item) => acc + item.price * item.count, 0)
 })
-
-watch(cart, () => {
-  cart.value = localStorage.getItem('pizzas')
-},  { deep: true });
 
 </script>
 

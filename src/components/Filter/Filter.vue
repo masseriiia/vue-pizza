@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import Button from '@/components/Button/Button.vue'
 
-const props = defineProps({
-  filters: Object
-})
+interface Filters {
+  pizzaNewBoolean: boolean
+  formDataPrice: {
+    priceFrom: number | null
+    priceTo: number | null
+  }
+}
 
-const emit = defineEmits(['emit-new', 'emit-price', 'emit-reset'])
+const props = defineProps<{ filters: Filters }>()
 
-function toggleNewPizzas(value) {
+const emit = defineEmits<{
+  (event: 'emit-new', value: boolean): void
+  (event: 'emit-price'): void
+  (event: 'emit-reset'): void
+}>()
+
+function toggleNewPizzas(value: boolean) {
   emit('emit-new', !value)
 }
 function applyPriceFilter() {

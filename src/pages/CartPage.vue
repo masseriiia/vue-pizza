@@ -1,36 +1,45 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import { computed, ref } from 'vue'
-
+import { computed } from 'vue'
 import Button from '@/components/Button/Button.vue'
 import OutlinedButton from '@/components/OutlinedButton/OutlinedButton.vue'
+import { useGlobalState } from '@/stores/store'
 
-const items = ref(JSON.parse(localStorage.getItem('pizzas')))
+interface PizzaItem {
+  id: number;
+  title: string;
+  type: string;
+  size: number;
+  price: number;
+  count: number;
+  image_url: string;
+}
+const items = useGlobalState()
 
 const cartClear = async () => {
   items.value = []
-  localStorage.setItem('pizzas', JSON.stringify([]))
+  cart.value([])
 }
 
-const onMinusPizza = (item) => {
+const onMinusPizza = (item: PizzaItem) => {
   if (item.count <= 1) {
     return 1
   }
   item.count--
-  localStorage.setItem('pizzas', JSON.stringify(items.value))
+  cart.value(items.value)
 }
 
-const onPlusPizza = (item) => {
+const onPlusPizza = (item: PizzaItem) => {
   if (item.count === 10) {
     return 10
   }
   item.count++
-  localStorage.setItem('pizzas', JSON.stringify(items.value))
+  cart.value(items.value)
 }
 
-const onDeletePizza = (id) => {
+const onDeletePizza = (id: number) => {
   items.value = items.value.filter(pizza => pizza.id !== id)
-  localStorage.setItem('pizzas', JSON.stringify(items.value))
+  cart.value(items.value)
 }
 
 const totalPrice = computed(() => {
