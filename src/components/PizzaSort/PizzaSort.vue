@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .sort {
   padding: 16px 22px;
   display: flex;

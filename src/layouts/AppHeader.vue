@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue'
 import { useGlobalState } from '@/stores/store.js'
 import { RouterLink } from 'vue-router'
-import Search from '@/components/Search/Search.vue'
-import Button from '@/components/Button/Button.vue'
+import Search from '@/components/PizzaSearch/PizzaSearch.vue'
+import UiButton from '@/components/UiButton/UiButton.vue'
 
 const cart = useGlobalState()
 
@@ -31,17 +31,17 @@ const totalPrice = computed(() => {
       </RouterLink>
       <Search :isOverlayVisible="isOverlayVisible" @toggle-overlay="isOverlayVisible = !isOverlayVisible" :close="close"/>
       <RouterLink to="/cart">
-        <Button>
+        <UiButton option="button">
           <p class="cart-price">{{ totalPrice }} ₽</p>
           <img src="../assets/icons/cart.svg" alt="Cart" />
-        </Button>
+        </UiButton>
       </RouterLink>
     </div>
     <div v-if="isOverlayVisible" class="overlay" @click.self="close"></div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .cart-price {
   padding-right: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.25);

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { computed } from 'vue'
-import Button from '@/components/Button/Button.vue'
-import OutlinedButton from '@/components/OutlinedButton/OutlinedButton.vue'
+import UiButton from '@/components/UiButton/UiButton.vue'
 import { useGlobalState } from '@/stores/store'
 
 interface PizzaItem {
@@ -18,7 +17,6 @@ const items = useGlobalState()
 
 const cartClear = async () => {
   items.value = []
-  cart.value([])
 }
 
 const onMinusPizza = (item: PizzaItem) => {
@@ -26,7 +24,6 @@ const onMinusPizza = (item: PizzaItem) => {
     return 1
   }
   item.count--
-  cart.value(items.value)
 }
 
 const onPlusPizza = (item: PizzaItem) => {
@@ -34,12 +31,10 @@ const onPlusPizza = (item: PizzaItem) => {
     return 10
   }
   item.count++
-  cart.value(items.value)
 }
 
 const onDeletePizza = (id: number) => {
   items.value = items.value.filter(pizza => pizza.id !== id)
-  cart.value(items.value)
 }
 
 const totalPrice = computed(() => {
@@ -65,9 +60,9 @@ const totalPrice = computed(() => {
             <p class="cart-item-info">{{ item.type }} тесто, {{ item.size }} см.</p>
           </div>
           <div class="cart-item-quantity">
-            <OutlinedButton @click="onMinusPizza(item)">-</OutlinedButton>
+            <UiButton option="button-outlined" @click="onMinusPizza(item)">-</UiButton>
               {{ item.count }}
-            <OutlinedButton @click="onPlusPizza(item)">+</OutlinedButton>
+            <UiButton option="button-outlined" @click="onPlusPizza(item)">+</UiButton>
           </div>
           <p class="cart-item-price">
             {{ item.price * item.count }} ₽
@@ -88,7 +83,7 @@ const totalPrice = computed(() => {
             Вернуться назад
           </button>
         </RouterLink>
-        <Button>Оплатить</Button>
+        <UiButton option="button">Оплатить</UiButton>
       </div>
     </div>
   </div>
@@ -102,13 +97,13 @@ const totalPrice = computed(() => {
       </p>
       <img class="cart-image-empty" src="@/assets/images/empty-cart.png">
       <RouterLink to="/">
-        <Button>Вернуться назад</Button>
+        <UiButton option="button">Вернуться назад</UiButton>
       </RouterLink>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .cart {
   display: flex;
   justify-content: center;

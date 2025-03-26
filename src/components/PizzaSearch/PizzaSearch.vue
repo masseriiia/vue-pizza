@@ -2,6 +2,16 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { fetchPizzas } from '@/services/pizzaService.ts'
 
+interface PizzaItem {
+  id: number
+  title: string
+  description?: string
+  image_url?: string
+  price: number
+  activeType: number
+  activeSize: number
+  sizes?: number[]
+}
 
 const props = defineProps<{
   isOverlayVisible: boolean,
@@ -12,7 +22,7 @@ const emit = defineEmits<{
   (event: 'toggle-overlay', value: boolean): void
 }>()
 
-const items = ref([])
+const items = ref<PizzaItem[]>([])
 const search = ref('')
 
 const loadPizzas = async () => {
@@ -27,17 +37,17 @@ const itemsProducts = computed(() => {
 
 const onTogglePizza = (e: Event) => {
   e.stopPropagation()
-  emit('toggle-overlay')
+  emit('toggle-overlay', !props.isOverlayVisible)
 }
 
-const handleKeyDown = (e: Event) => {
+const handleKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'Escape') {
-    emit('toggle-overlay')
+    emit('toggle-overlay', false)
   }
 }
 
-onMounted(() => {
-  loadPizzas()
+onMounted(async () => {
+  await loadPizzas()
   document.addEventListener('keydown', handleKeyDown)
 })
 
@@ -67,7 +77,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
   </div>
 </template>
 
-<style>
+<style scoped>
 .search {
   width: 874px;
   opacity: 1;
@@ -127,6 +137,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeyDown))
 
 .search-item:hover {
   background-color: #fffaf6;
+  border-radius: 10px;
 }
 
 .search-item-title {

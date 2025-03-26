@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Button from '@/components/Button/Button.vue'
+import UiButton from '@/components/UiButton/UiButton.vue'
 
 interface Filters {
   pizzaNewBoolean: boolean
@@ -61,11 +61,11 @@ function resetFilters() {
       </form>
     </div>
     <button class="button-price-reset" @click="resetFilters">сбросить</button>
-    <Button @click="applyPriceFilter">Применить</Button>
+    <UiButton option="button" @click="applyPriceFilter">Применить</UiButton>
   </div>
 </template>
 
-<style>
+<style scoped>
 
 .filter-title {
   margin-bottom: 30px;

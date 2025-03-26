@@ -1,23 +1,36 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey: string = import.meta.env.VITE_SUPABASE_KEY
 
 export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
-interface Pizza {
+export interface Pizza {
   id: number;
   title: string;
+  description: string;
+  image_url: string;
   price: number;
-  category: number;
-  rating: number;
-  new?: boolean;
-  activeType: number;
-  activeSize: number;
-  count: number;
+  types: number[];
+  sizes: number[];
+  activeType?: number;
+  activeSize?: number;
+  category?: number;  
+  count?: number;   
+  new?: boolean;    
+  rating?: number;   
 }
 
-const transformPizzas = (data): Pizza[] => {
+export interface FilterOptions {
+  activeCategory: number;
+  activeSort: string;
+  pizzaNewBoolean: boolean;
+  formDataPrice: {
+    priceFrom: number;
+    priceTo: number;
+  };
+}
+
+const transformPizzas = (data: Pizza[]): Pizza[] => {
   return data?.map(item => ({
     ...item,
     activeType: 0,
@@ -28,10 +41,10 @@ const transformPizzas = (data): Pizza[] => {
 
 export async function fetchPizzas() {
   const { data } = await supabase.from('pizza').select()
-  return transformPizzas(data);
+  return transformPizzas(data || []);
 }
 
-export async function fetchPizzasWithFilters(obj, page: number, perPage: number) {
+export async function fetchPizzasWithFilters(obj: FilterOptions, page: number, perPage: number) {
   const start = (page - 1) * perPage
   const end = start + perPage - 1
 
@@ -49,7 +62,7 @@ export async function fetchPizzasWithFilters(obj, page: number, perPage: number)
   const { data, count } = await query
 
   return {
-    data: transformPizzas(data),
+    data: transformPizzas(data || []),
     total: count,
   };
 }
@@ -99,5 +112,5 @@ export async function fetchPizzasPopular() {
     .select()
     .gte('rating', 9);
 
-  return transformPizzas(data);
+  return transformPizzas(data || []);
 }
