@@ -20,7 +20,7 @@ const onChange = (id: number) => {
     <ul class="category-items">
       <li
         class="category-item"
-        :class="{active: activeCategory === index }"
+        :class="{active: activeCategory === index}"
         v-for="(item, index) in category"
         @click="onChange(index)"
         :key="index"
@@ -31,7 +31,7 @@ const onChange = (id: number) => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .category-items {
   padding: 5px;
   display: flex;
@@ -49,6 +49,7 @@ const onChange = (id: number) => {
   color: #202020;
   list-style-type: none;
   border-radius: 15px;
+  cursor: pointer;
 }
 
 .category-item.active {
