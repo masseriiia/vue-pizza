@@ -2,10 +2,10 @@
   import { useRouter } from 'vue-router'
   import { onMounted, ref, watch } from 'vue'
   import { fetchGetPizzaById, fetchPizzasPopular } from '@/services/pizzaService.ts'
-  import Button from '@/components/Button/Button.vue'
-  import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
+  import UiButton from '@/components/UiButton/UiButton.vue'
   import PizzaItem from '@/components/PizzaItem/PizzaItem.vue'
   import { useGlobalState } from '@/stores/store'
+  import Breadcrumb from '@/components/BreadcrumbNavigation/BreadcrumbNavigation.vue'
 
   interface Pizza {
   id: number;
@@ -17,12 +17,16 @@
   sizes: number[];
   activeType?: number;
   activeSize?: number;
+  category?: number;
+  count?: number;
+  new?: boolean;
+  rating?: number;
 }
 
   const router = useRouter()
   const currentId = ref(Number(router.currentRoute.value.params.id))
-  const pizza = ref([])
-  const populars = ref([])
+  const pizza = ref<Pizza>([])
+  const populars = ref<Pizza[]>([])
   const isLoading = ref(false)
 
   const cart = useGlobalState()
@@ -34,11 +38,15 @@
   }
 
   const onClickType = (index: number) => {
-    pizza.value.activeType = index
+    if(pizza.value) {
+      pizza.value.activeType = index
+    }
   }
 
   const onClickSize = (index: number) => {
-    pizza.value.activeSize = index
+    if(pizza.value) {
+      pizza.value.activeSize = index
+    }
   }
 
   const onAddCart = async (item: Pizza) => {
@@ -105,7 +113,7 @@
       Загрузка...
     </div>
     <div v-else class="pizza-wrapper">
-      <p class="pizza-location"><RouterLink class="pizza-location" to="/">Главная</RouterLink> / <RouterLink class="pizza-location" to="/">Пиццы</RouterLink> / <span>{{ pizza.title }}</span></p>
+      <Breadcrumb :title="pizza.title"/>
       <div  class="pizza-content">
         <img :src="pizza.image_url" width="400" height="400" alt="Pizza" />
         <div class="pizza-info">
@@ -129,12 +137,12 @@
           </div>
           <div class="pizza-bottom">
             <p class="pizza-price">{{ pizza.price }} ₽</p>
-            <SecondaryButton v-if="getPizzaCount(pizza) > 0" @click="() => onAddCart(pizza)">
+            <UiButton option="button-secondary" v-if="getPizzaCount(pizza) > 0" @click="() => onAddCart(pizza)">
               + Добавить <span class="pizza-item-count">{{ getPizzaCount(pizza) > 0 ? getPizzaCount(pizza) : '' }}</span>
-            </SecondaryButton>
-            <Button v-else @click="() => onAddCart(pizza)">
+            </UiButton>
+            <UiButton option="button" v-else @click="() => onAddCart(pizza)">
               + Добавить
-            </Button>
+            </UiButton>
           </div>
         </div>
       </div>
@@ -152,19 +160,6 @@
 
 .pizza {
   padding-bottom: 30px;
-}
-
-.pizza-location {
-  margin-bottom: 40px;
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 143%;
-  color: #373737;
-
-  span {
-    color: rgba(55, 55, 55, 0.6);
-  };
 }
 
 .pizza-content {

@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useGlobalState } from '@/stores/store.js'
 import { RouterLink } from 'vue-router'
-import Search from '@/components/PizzaSearch/Search.vue'
+import Search from '@/components/PizzaSearch/PizzaSearch.vue'
 import UiButton from '@/components/UiButton/UiButton.vue'
 
 const cart = useGlobalState()

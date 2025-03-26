@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
+import UiButton from '@/components/UiButton/UiButton.vue'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
         <h2 class="error-title">Страница не найдена</h2>
         <p class="error-description">Проверьте корректность введённого адреса или повторите попытку позже</p>
         <RouterLink to="/">
-          <SecondaryButton> &larr; На главную </SecondaryButton>
+          <UiButton option="button-secondary"> &larr; На главную </UiButton>
         </RouterLink>
       </div>
       <img src="@/assets/images/error.png" alt="Error">
@@ -17,12 +17,7 @@ import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
   </div>
 </template>
 
-<style>
-
-.error {
-
-}
-
+<style scoped>
 .error-wrapper {
   display: flex;
   justify-content: center;

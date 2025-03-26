@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import Button from '@/components/Button/Button.vue'
+  import UiButton from '@/components/UiButton/UiButton.vue'
   import { useGlobalState } from '@/stores/store'
-  import SecondaryButton from '@/components/SecondaryButton/SecondaryButton.vue'
 
   interface PizzaItem {
   id: number
@@ -40,10 +39,9 @@
     } else {
       cart.value.push(pizza)
     }
-
   }
 
-  const getPizzaCount = (item) => {
+  const getPizzaCount = (item: PizzaItem) => {
     const pizza = {
       ...item,
       type: typesNames[item.activeType],
@@ -67,12 +65,12 @@
     <div>
       <div class="pizza-item-bottom">
         <p class="pizza-item-price">{{ item.price }} ₽</p>
-        <SecondaryButton v-if="getPizzaCount(item) > 0" @click="() => onAddCart(item)">
+        <UiButton option="button-secondary" v-if="getPizzaCount(item) > 0" @click="() => onAddCart(item)">
           + Добавить <span class="pizza-item-count">{{ getPizzaCount(item) > 0 ? getPizzaCount(item) : '' }}</span>
-        </SecondaryButton>
-        <Button v-else @click="() => onAddCart(item)">
+        </UiButton>
+        <UiButton option="button" v-else @click="() => onAddCart(item)">
          + Добавить
-        </Button>
+        </UiButton>
       </div>
     </div>
   </div>
